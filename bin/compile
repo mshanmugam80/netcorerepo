@@ -77,6 +77,7 @@ else
 fi
 
 mkdir -p ${BUILD_DIR}/.apt
+mkdir -p ${BUILD_DIR}/.apt/sources.list.d
 print "Installing dotnet core"
 echo "deb [arch=amd64] https://apt-mo.trafficmanager.net/repos/dotnet/ xenial main" > ${BUILD_DIR}/.apt/sources.list.d/dotnetdev.list
 chmod 777 ${BUILD_DIR}/.apt/sources.list.d/dotnetdev.list
