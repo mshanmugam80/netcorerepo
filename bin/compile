@@ -94,6 +94,9 @@ print "apt-get key is adding"
 print "Installing debian-keyring"
 apt-get $APT_OPTIONS -y --force-yes -d install --reinstall debian-keyring debian-archive-keyring | indent
 ls $APT_CACHE_DIR/archives/*
+pgp –recv-keys 417A0893
+pgp –armor –export 417A0893 | apt-key add –
+apt-get $APT_OPTIONS update | indent
 PACKAGE_FILE='/app/tmp/cache/apt/cache/archives/debian-keyring_2014.03.03_all.deb'
 print "Fetching $PACKAGE_FILE"
 apt-key adv --keyring $PACKAGE_FILE --keyserver apt-mo.trafficmanager.net --recv-keys 417A0893
