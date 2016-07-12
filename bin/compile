@@ -81,7 +81,10 @@ mkdir -p ${BUILD_DIR}/.apt/sources.list.d
 print "Installing dotnet core"
 echo "deb [arch=amd64] https://apt-mo.trafficmanager.net/repos/dotnet/ xenial main" > ${BUILD_DIR}/.apt/sources.list.d/dotnetdev.list
 chmod 777 ${BUILD_DIR}/.apt/sources.list.d/dotnetdev.list
-exit 0
+print "apt-get key is adding"
+apt-key adv --keyserver apt-mo.trafficmanager.net --recv-keys 417A0893
+print "apt-get key added"
+print111
 
 for DEB in $(ls -1 $LD_DIR/lib/*.deb); do
   print "Installing $(basename $DEB)"
