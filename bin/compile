@@ -67,7 +67,7 @@ echo "CORE_BRANCH: ${CORE_BRANCH}"
 echo "CORE_REL_VERSION: ${CORE_REL_VERSION}"
 echo "CORE_VERSION: ${CORE_VERSION}"
 
-CORE_DWLD_URL="https://dotnetcli.blob.core.windows.net/dotnet/${CORE_BRANCH}/${CORE_REL_VERSION}/dotnet-sdk-ubuntu-x64.${CORE_VERSION}.tar.gz"
+CORE_DWLD_URL="https://dotnetcli.blob.core.windows.net/dotnet/${CORE_BRANCH}/${CORE_REL_VERSION}/dotnet-sdk-ubuntu-x64.${CORE_VERSION}.deb"
 
 APT_CACHE_DIR="$CACHE_DIR/apt/cache"
 APT_STATE_DIR="$CACHE_DIR/apt/state"
@@ -78,9 +78,12 @@ print "Updating apt caches"
 apt-get $APT_OPTIONS update | indent
 
 print "DotNet Core Sdk is downloading from : ${CORE_DWLD_URL}"
+dpkg -x $CORE_DWLD_URL ${BUILD_DIR}/dotnet
+ln -s ${BUILD_DIR}/dotnet /app
+dotnet --version
+
 curl -sSL ${CORE_DWLD_URL} -Ls | tar zxfv - -C ${BUILD_DIR}/dotnet
 ln -s ${BUILD_DIR}/dotnet /app
-
 dotnet --version
 
 mkdir -p ${BUILD_DIR}/.profile.d
