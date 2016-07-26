@@ -78,7 +78,7 @@ print "Updating apt caches"
 apt-get $APT_OPTIONS update | indent
 
 print "DotNet Core Sdk is downloading from : ${CORE_DWLD_URL}"
-curl -sSL ${CORE_DWLD_URL} -Ls | | tar zxfv - -C ${BUILD_DIR}/dotnet
+curl -sSL ${CORE_DWLD_URL} -Ls | tar zxfv - -C ${BUILD_DIR}/dotnet
 ln -s ${BUILD_DIR}/dotnet /app
 
 dotnet --version
