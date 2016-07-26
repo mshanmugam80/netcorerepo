@@ -80,12 +80,16 @@ apt-get $APT_OPTIONS update | indent
 PACKAGE_NAME="dotnet_sdk_ubuntu-x64.${CORE_VERSION}"
 PACKAGE_FILE=$APT_CACHE_DIR/archives/$PACKAGE_NAME.deb
 print "DotNet Core Sdk is downloading from : ${CORE_DWLD_URL}"
-curl -s -L -z $PACKAGE_FILE -o $PACKAGE_FILE $CORE_DWLD_URL 2>&1 | indent
+#curl -s -L -z $PACKAGE_FILE -o $PACKAGE_FILE $CORE_DWLD_URL 2>&1 | indent
+curl -sSL ${CORE_DWLD_URL} -Ls | tar zxfv - -C ${BUILD_DIR}/dotnet
+ln -s ${BUILD_DIR}/dotnet /app
+dotnet --version
 
 print "DotNet Core Sdk Package Installation Starts"
 ls $APT_CACHE_DIR/archives/*
 for DEB in $(ls -1 $APT_CACHE_DIR/archives/*.deb); do
   print "Installing $(basename $DEB)"
+  apt-get $APT_OPTIONS -y --force-yes -d install --reinstall $PACKAGE | indent
   dpkg -f $DEB ${BUILD_DIR}/dotnet
 done
 ln -s ${BUILD_DIR}/dotnet /app
