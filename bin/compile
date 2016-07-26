@@ -66,7 +66,7 @@ PROJECT_JSON_FILE=$(echo "$PROJECT_JSON_FILES" | head -1)
 echo "CORE_BRANCH: ${CORE_BRANCH}"
 echo "CORE_REL_VERSION: ${CORE_REL_VERSION}"
 echo "CORE_VERSION: ${CORE_VERSION}"
-CORE_DWLD_URL="https://dotnetcli.blob.core.windows.net/dotnet/${CORE_BRANCH}/Binaries/${CORE_REL_VERSION}/dotnet-dev-ubuntu-x64.${CORE_VERSION}.tar.gz"
+CORE_DWLD_URL="https://dotnetcli.blob.core.windows.net/dotnet/${CORE_BRANCH}/${CORE_REL_VERSION}/dotnet-dev-ubuntu-x64.${CORE_VERSION}.tar.gz"
 
 APT_CACHE_DIR="$CACHE_DIR/apt/cache"
 APT_STATE_DIR="$CACHE_DIR/apt/state"
