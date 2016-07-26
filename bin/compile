@@ -12,8 +12,9 @@ BUILD_DIR=$1
 CACHE_DIR=$2
 ENV_DIR=$3
 : ${LIBUV_VERSION:="1.8.0"}
-: ${DNVM_BRANCH:="dev"}
-: ${DNX_VERSION:="latest"}
+: ${CORE_BRANCH:="Sdk"}
+: ${CORE_REL_VERSION:="latest"}
+: ${CORE_VERSION:="latest"}
 
 function print() {
   echo "-----> $*"
@@ -29,7 +30,7 @@ function indent() {
 
 function export_env_dir() {
   local env_dir=$1
-  local whitelist_regex=${2:-'(DNX_VERSION|LIBUV_VERSION|PROJECT|BUILD_DEBUG|DNVM_BRANCH)$'}
+  local whitelist_regex=${2:-'(CORE_VERSION|LIBUV_VERSION|PROJECT|BUILD_DEBUG|CORE_BRANCH|CORE_REL_VERSION)$'}
   local blacklist_regex=${3:-'^(PATH|GIT_DIR|CPATH|CPPATH|LD_PRELOAD|LIBRARY_PATH)$'}
   if [ -d "$env_dir" ]; then
     for e in $(ls $env_dir); do
@@ -62,19 +63,11 @@ PROJECT_JSON_FILES=$(find ${SRC_DIR}/. -maxdepth 3 -iname "project.json")
 printf 'Found %s project.json files\n' $(echo "$PROJECT_JSON_FILES" | wc -l | tr -d ' ')
 PROJECT_JSON_FILE=$(echo "$PROJECT_JSON_FILES" | head -1)
 
-if [ -n "$BUILD_DEBUG" ]; then
-	DNU_FLAGS=""
-	echo "DNX_VERSION: ${DNX_VERSION}"
-	echo "DNVM_BRANCH: ${DNVM_BRANCH}"
-else
-	DNU_FLAGS="--quiet"
-fi
+echo "CORE_BRANCH: ${CORE_BRANCH}"
+echo "CORE_REL_VERSION: ${CORE_REL_VERSION}"
+echo "CORE_VERSION: ${CORE_VERSION}"
 
-if [ -n "$UNSTABLE_TOOLCHAIN" ]; then
-	DNVM_FLAGS="-u"
-else
-	DNVM_FLAGS=""
-fi
+CORE_DWLD_URL="https://dotnetcli.blob.core.windows.net/dotnet/${CORE_BRANCH}/${CORE_REL_VERSION}/dotnet-sdk-ubuntu-x64.${CORE_VERSION}.tar.gz"
 
 APT_CACHE_DIR="$CACHE_DIR/apt/cache"
 APT_STATE_DIR="$CACHE_DIR/apt/state"
@@ -84,28 +77,11 @@ APT_OPTIONS="-o debug::nolocking=true -o dir::cache=$APT_CACHE_DIR -o dir::state
 print "Updating apt caches"
 apt-get $APT_OPTIONS update | indent
 
-mkdir -p ${BUILD_DIR}/.apt
-mkdir -p ${BUILD_DIR}/.apt/sources.list.d
+print "DotNet Core Sdk is downloading from : ${CORE_DWLD_URL}"
+curl ${CORE_DWLD_URL} -Ls | tar xz -C ${BUILD_DIR}/dotnet
+ln -s ${BUILD_DIR}/dotnet /app
 
-print "Installing dotnet core"
-echo "deb [arch=amd64] https://apt-mo.trafficmanager.net/repos/dotnet/ xenial main" > ${BUILD_DIR}/.apt/sources.list.d/dotnetdev.list
-chmod 777 ${BUILD_DIR}/.apt/sources.list.d/dotnetdev.list
-print "apt-get key is adding"
-print "Installing debian-keyring"
-apt-get $APT_OPTIONS -y --force-yes -d install --reinstall debian-keyring debian-archive-keyring | indent
-ls $APT_CACHE_DIR/archives/*
-#gpg –recv-keys 417A0893
-#gpg –armor –export 417A0893 | apt-key add –
-PACKAGE_FILE='/app/tmp/cache/apt/cache/archives/debian-keyring_2014.03.03_all.deb'
-print "Fetching $PACKAGE_FILE"
-apt-key adv -keyserver apt-mo.trafficmanager.net --recv-keys 417A0893
-print "apt-get key added"
-print111
-
-for DEB in $(ls -1 $LD_DIR/lib/*.deb); do
-  print "Installing $(basename $DEB)"
-  dpkg -x $DEB ${BUILD_DIR}/.apt/
-done
+dotnet --version
 
 mkdir -p ${BUILD_DIR}/.profile.d
 cat <<EOF >${BUILD_DIR}/.profile.d/000_apt.sh
