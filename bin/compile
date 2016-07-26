@@ -83,9 +83,10 @@ print "DotNet Core Sdk is downloading from : ${CORE_DWLD_URL}"
 curl -s -L -z $PACKAGE_FILE -o $PACKAGE_FILE $CORE_DWLD_URL 2>&1 | indent
 
 print "DotNet Core Sdk Package Installation Starts"
+ls $APT_CACHE_DIR/archives/*
 for DEB in $(ls -1 $APT_CACHE_DIR/archives/*.deb); do
   print "Installing $(basename $DEB)"
-  dpkg -x $DEB ${BUILD_DIR}/dotnet
+  dpkg -f $DEB ${BUILD_DIR}/dotnet
 done
 ln -s ${BUILD_DIR}/dotnet /app
 dotnet --version
