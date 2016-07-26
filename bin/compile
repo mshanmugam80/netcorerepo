@@ -80,6 +80,7 @@ PACKAGE_NAME="dotnet_sdk_ubuntu-x64.${CORE_VERSION}"
 PACKAGE_FILE=$APT_CACHE_DIR/archives/$PACKAGE_NAME.deb
 print "DotNet Core Sdk is downloading from : ${CORE_DWLD_URL}"
 #curl -s -L -z $PACKAGE_FILE -o $PACKAGE_FILE $CORE_DWLD_URL 2>&1 | indent
+mkdir -p "${BUILD_DIR}/dotnet"
 curl ${CORE_DWLD_URL} -Ls | tar xz -C ${BUILD_DIR}/dotnet
 ln -s ${BUILD_DIR}/dotnet /app
 dotnet --version
