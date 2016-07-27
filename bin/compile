@@ -82,8 +82,10 @@ print "DotNet Core Sdk is downloading from : ${CORE_DWLD_URL}"
 #curl -s -L -z $PACKAGE_FILE -o $PACKAGE_FILE $CORE_DWLD_URL 2>&1 | indent
 mkdir -p "${BUILD_DIR}/dotnet"
 curl ${CORE_DWLD_URL} -Ls | tar xz -C ${BUILD_DIR}/dotnet
-ln -s ${BUILD_DIR}/dotnet /app
+ln -s ${BUILD_DIR}/dotnet ${HOME}
 ls ${BUILD_DIR}/dotnet
+export PATH="{HOME}/dotnet:$PATH"
+export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}"
 dotnet --version
 
 print "DotNet Core Sdk Package Installation Starts"
