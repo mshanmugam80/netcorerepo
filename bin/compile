@@ -76,6 +76,12 @@ APT_OPTIONS="-o debug::nolocking=true -o dir::cache=$APT_CACHE_DIR -o dir::state
 print "Updating apt caches"
 apt-get $APT_OPTIONS update | indent
 
+mkdir -p ${BUILD_DIR}/.apt
+for DEB in $(ls -1 $LD_DIR/lib/*.deb); do
+  print "Installing $(basename $DEB)"
+  dpkg -x $DEB ${BUILD_DIR}/.apt/
+done
+
 PACKAGE_NAME="dotnet_sdk_ubuntu-x64.${CORE_VERSION}"
 PACKAGE_FILE=$APT_CACHE_DIR/archives/$PACKAGE_NAME.deb
 print "DotNet Core Sdk is downloading from : ${CORE_DWLD_URL}"
