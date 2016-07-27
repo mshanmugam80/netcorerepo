@@ -125,15 +125,14 @@ print "dotnet restore all dependencies completed"
 print "dotnet publish starts."
 dotnet publish --output ${BUILD_DIR} --configuration ${CORE_CONFIG} ${PROJECT_JSON_FILE} --runtime ${CORE_VERSION}
 print "dotnet publish ended."
-ls ${BUILD_DIR}
-PRJECT_NAME=$(grep -Po '"'"outputName"'"\s*:\s*"\K([^"]*)'  ${PROJECT_JSON_FILE})
-print "${PRJECT_NAME}.dll has been created."
+PROJECT_NAME=$(grep -Po '"'"outputName"'"\s*:\s*"\K([^"]*)'  ${PROJECT_JSON_FILE})
+print "${PROJECT_NAME}.dll has been created."
 
 # app start up script
 cat <<EOF > ${BUILD_DIR}/appstartup
 #!/usr/bin/env bash
 $HOME/approot/dotnet --version
-$HOME/approot/dotnet ./${APP_NAME}.dll --server.urls http://+:\$PORT ${CORE_ENV}
+$HOME/approot/dotnet ${BUILD_DIR}/${PROJECT_NAME}.dll --server.urls http://+:\$PORT ${CORE_ENV}
 EOF
 chmod 777 ${BUILD_DIR}/appstartup
 
