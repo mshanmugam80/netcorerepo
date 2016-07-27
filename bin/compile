@@ -116,7 +116,7 @@ ln -s ${BUILD_DIR}/dotnet ${HOME}
 export PATH="${HOME}/dotnet:${PATH}"
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}"
 dotnet --version
-APP_NAME=$(ruby -rjson -e 'j = JSON.parse(File.read("${PROJECT_JSON_FILE}")); puts j["buildOptions"]["outputName"]; end')
+APP_NAME=$(ruby -rjson -e 'j = JSON.parse(File.read("$PROJECT_JSON_FILE")); puts j["buildOptions"]["outputName"]')
 print "App name is ${APP_NAME}"
 
 print "dotnet restore all dependencies"
