@@ -83,7 +83,7 @@ print "DotNet Core Sdk is downloading from : ${CORE_DWLD_URL}"
 mkdir -p "${BUILD_DIR}/dotnet"
 curl ${CORE_DWLD_URL} -Ls | tar xz -C ${BUILD_DIR}/dotnet
 ln -s ${BUILD_DIR}/dotnet ${HOME}
-ls ${BUILD_DIR}/dotnet
+ls ${HOME}
 export PATH="{HOME}/dotnet:$PATH"
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}"
 dotnet --version
