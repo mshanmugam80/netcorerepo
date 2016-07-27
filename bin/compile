@@ -112,8 +112,8 @@ CORE_DWLD_URL="https://dotnetcli.blob.core.windows.net/dotnet/${CORE_BRANCH}/${C
 print "DotNet Core Sdk Package Installation Starts From : ${CORE_DWLD_URL}"
 mkdir -p "${BUILD_DIR}/dotnet"
 curl ${CORE_DWLD_URL} -Ls | tar xz -C ${BUILD_DIR}/dotnet
-ln -s ${BUILD_DIR}/dotnet ${HOME}
-export PATH="${HOME}/dotnet:${PATH}"
+ln -s ${BUILD_DIR}/dotnet /app
+export PATH="/app/dotnet:${PATH}"
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}"
 dotnet --version
 
@@ -131,10 +131,11 @@ print "${PROJECT_NAME}.dll has been created."
 # app start up script
 cat <<EOF > ${BUILD_DIR}/appstartup
 #!/usr/bin/env bash
-export PATH="$HOME/dotnet:$PATH"
+echo $PATH
+export PATH="/app/dotnet:$PATH"
 export LD_LIBRARY_PATH="$LD_LIBRARY_PATH"
-$HOME/dotnet --version
-$HOME/dotnet ${BUILD_DIR}/${PROJECT_NAME}.dll --server.urls http://+:\$PORT ${CORE_ENV}
+dotnet --version
+dotnet ${BUILD_DIR}/${PROJECT_NAME}.dll --server.urls http://+:\$PORT ${CORE_ENV}
 EOF
 chmod 777 ${BUILD_DIR}/appstartup
 
