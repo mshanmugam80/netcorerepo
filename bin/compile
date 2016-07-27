@@ -134,7 +134,7 @@ cat <<EOF > ${BUILD_DIR}/appstartup
 #!/usr/bin/env bash
 echo $PATH
 dotnet --version
-dotnet ${BUILD_DIR}/${PROJECT_NAME}.dll --server.urls http://+:\$PORT ${CORE_ENV}
+dotnet ${HOME}/${PROJECT_NAME}.dll --server.urls http://+:\$PORT ${CORE_ENV}
 EOF
 chmod 777 ${BUILD_DIR}/appstartup
 
