@@ -116,6 +116,8 @@ ln -s ${BUILD_DIR}/dotnet ${HOME}
 export PATH="${HOME}/dotnet:${PATH}"
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}"
 dotnet --version
+APP_NAME=$(ruby -rjson -e 'j = JSON.parse(File.read("${PROJECT_JSON_FILE}")); puts j["buildOptions"]["outputName"]; end')
+print "App name is ${APP_NAME}"
 
 print "dotnet restore all dependencies"
 dotnet restore ${PROJECT_JSON_FILE} --no-cache
@@ -130,7 +132,8 @@ ls ${BUILD_DIR} -l
 # app start up script
 cat <<EOF > ${BUILD_DIR}/appstartup
 #!/usr/bin/env bash
-$HOME/approot/dotnet ./${PROJECT_NAME}.dll --server.urls http://+:\$PORT ${CORE_ENV}
+$HOME/approot/dotnet --version
+$HOME/approot/dotnet ./${APP_NAME}.dll --server.urls http://+:\$PORT ${CORE_ENV}
 EOF
 chmod 777 ${BUILD_DIR}/appstartup
 
