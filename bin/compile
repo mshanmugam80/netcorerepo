@@ -131,8 +131,10 @@ print "${PROJECT_NAME}.dll has been created."
 # app start up script
 cat <<EOF > ${BUILD_DIR}/appstartup
 #!/usr/bin/env bash
-$HOME/approot/dotnet --version
-$HOME/approot/dotnet ${BUILD_DIR}/${PROJECT_NAME}.dll --server.urls http://+:\$PORT ${CORE_ENV}
+export PATH="$HOME/dotnet:$PATH"
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH"
+$HOME/dotnet --version
+$HOME/dotnet ${BUILD_DIR}/${PROJECT_NAME}.dll --server.urls http://+:\$PORT ${CORE_ENV}
 EOF
 chmod 777 ${BUILD_DIR}/appstartup
 
