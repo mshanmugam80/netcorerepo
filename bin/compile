@@ -70,7 +70,9 @@ else
 	CORE_CONFIG="Release"
 	CORE_ENV=""
 fi
-
+	CORE_CONFIG="Debug"
+	CORE_ENV="--environment Development"
+	
 APT_CACHE_DIR="$CACHE_DIR/apt/cache"
 APT_STATE_DIR="$CACHE_DIR/apt/state"
 mkdir -p "$APT_CACHE_DIR/archives/partial"
