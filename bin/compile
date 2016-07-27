@@ -85,17 +85,6 @@ for DEB in $(ls -1 $LD_DIR/lib/*.deb); do
   dpkg -x $DEB ${BUILD_DIR}/.apt/
 done
 
-mkdir -p ${BUILD_DIR}/.profile.d
-cat <<EOF >${BUILD_DIR}/.profile.d/000_apt.sh
-export PATH="\$HOME/.apt/usr/bin:\$PATH"
-export LD_LIBRARY_PATH="\$HOME/.apt/usr/lib/x86_64-linux-gnu:\$HOME/.apt/usr/lib/i386-linux-gnu:\$HOME/.apt/usr/lib:\$LD_LIBRARY_PATH"
-export LIBRARY_PATH="\$HOME/.apt/usr/lib/x86_64-linux-gnu:\$HOME/.apt/usr/lib/i386-linux-gnu:\$HOME/.apt/usr/lib:\$LIBRARY_PATH"
-export INCLUDE_PATH="\$HOME/.apt/usr/include:\$INCLUDE_PATH"
-export CPATH="\$INCLUDE_PATH"
-export CPPPATH="\$INCLUDE_PATH"
-export PKG_CONFIG_PATH="\$HOME/.apt/usr/lib/x86_64-linux-gnu/pkgconfig:\$HOME/.apt/usr/lib/i386-linux-gnu/pkgconfig:\$HOME/.apt/usr/lib/pkgconfig:\$PKG_CONFIG_PATH"
-EOF
-
 export PATH="${BUILD_DIR}/.apt/usr/bin:$PATH"
 export LD_LIBRARY_PATH="${BUILD_DIR}/.apt/usr/lib/x86_64-linux-gnu:${BUILD_DIR}/.apt/usr/lib/i386-linux-gnu:${BUILD_DIR}/.apt/usr/lib:$LD_LIBRARY_PATH"
 export LIBRARY_PATH="${BUILD_DIR}/.apt/usr/lib/x86_64-linux-gnu:${BUILD_DIR}/.apt/usr/lib/i386-linux-gnu:${BUILD_DIR}/.apt/usr/lib:$LIBRARY_PATH"
@@ -112,8 +101,8 @@ CORE_DWLD_URL="https://dotnetcli.blob.core.windows.net/dotnet/${CORE_BRANCH}/${C
 print "DotNet Core Sdk Package Installation Starts From : ${CORE_DWLD_URL}"
 mkdir -p "${BUILD_DIR}/dotnet"
 curl ${CORE_DWLD_URL} -Ls | tar xz -C ${BUILD_DIR}/dotnet
-ln -s ${BUILD_DIR}/dotnet /app
-export PATH="/app/dotnet:${PATH}"
+ln -s ${BUILD_DIR}/dotnet ${HOME}
+export PATH="${HOME}/dotnet:${PATH}"
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}"
 dotnet --version
 
@@ -125,15 +114,25 @@ print "dotnet restore all dependencies completed"
 print "dotnet publish starts."
 dotnet publish --output ${BUILD_DIR} --configuration ${CORE_CONFIG} ${PROJECT_JSON_FILE} --runtime ${CORE_VERSION}
 print "dotnet publish ended."
+
 PROJECT_NAME=$(grep -Po '"'"outputName"'"\s*:\s*"\K([^"]*)'  ${PROJECT_JSON_FILE})
 print "${PROJECT_NAME}.dll has been created."
+
+mkdir -p ${BUILD_DIR}/.profile.d
+cat <<EOF >${BUILD_DIR}/.profile.d/000_apt.sh
+export PATH="$HOME/dotnet:$HOME/.apt/usr/bin:$PATH"
+export LD_LIBRARY_PATH="\$HOME/.apt/usr/lib/x86_64-linux-gnu:\$HOME/.apt/usr/lib/i386-linux-gnu:\$HOME/.apt/usr/lib:\$LD_LIBRARY_PATH"
+export LIBRARY_PATH="\$HOME/.apt/usr/lib/x86_64-linux-gnu:\$HOME/.apt/usr/lib/i386-linux-gnu:\$HOME/.apt/usr/lib:\$LIBRARY_PATH"
+export INCLUDE_PATH="\$HOME/.apt/usr/include:\$INCLUDE_PATH"
+export CPATH="\$INCLUDE_PATH"
+export CPPPATH="\$INCLUDE_PATH"
+export PKG_CONFIG_PATH="\$HOME/.apt/usr/lib/x86_64-linux-gnu/pkgconfig:\$HOME/.apt/usr/lib/i386-linux-gnu/pkgconfig:\$HOME/.apt/usr/lib/pkgconfig:\$PKG_CONFIG_PATH"
+EOF
 
 # app start up script
 cat <<EOF > ${BUILD_DIR}/appstartup
 #!/usr/bin/env bash
 echo $PATH
-export PATH="/app/dotnet:$PATH"
-export LD_LIBRARY_PATH="$LD_LIBRARY_PATH"
 dotnet --version
 dotnet ${BUILD_DIR}/${PROJECT_NAME}.dll --server.urls http://+:\$PORT ${CORE_ENV}
 EOF
