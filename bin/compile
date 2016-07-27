@@ -126,9 +126,9 @@ print "dotnet publish starts."
 dotnet publish --output ${BUILD_DIR} --configuration ${CORE_CONFIG} ${PROJECT_JSON_FILE} --runtime ${CORE_VERSION}
 print "dotnet publish ended."
 ls ${BUILD_DIR}
-PROJECT_JSON_FILES=$(find ${BUILD_DIR}/. -maxdepth 3 -iname "project.json")
+PRJECT_NAME=$(grep -Po '"'"outputName"'"\s*:\s*"\K([^"]*)'  ${PROJECT_JSON_FILE})
+print "${PRJECT_NAME}.dll has been created."
 
-ls ${BUILD_DIR} -l
 # app start up script
 cat <<EOF > ${BUILD_DIR}/appstartup
 #!/usr/bin/env bash
