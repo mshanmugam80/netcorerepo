@@ -87,6 +87,19 @@ for DEB in $(ls -1 $LD_DIR/lib/*.deb); do
   dpkg -x $DEB ${BUILD_DIR}/.apt/
 done
 
+# libuv configuration
+print "libuv install"
+mkdir -p ${BUILD_DIR}/libuvinstall
+curl -sSL https://github.com/libuv/libuv/archive/v${LIBUV_VERSION}.tar.gz | tar zxfv - -C ${BUILD_DIR}
+cd ${BUILD_DIR}/libuv-${LIBUV_VERSION}
+sh autogen.sh
+./configure --prefix=${BUILD_DIR}/libuvinstall
+make
+make install
+cd ${SRC_DIR}
+rm -rf ${BUILD_DIR}/libuv-${LIBUV_VERSION}
+print "libuv installed."
+
 export PATH="${BUILD_DIR}/.apt/usr/bin:$PATH"
 export LD_LIBRARY_PATH="${BUILD_DIR}/.apt/usr/lib/x86_64-linux-gnu:${BUILD_DIR}/.apt/usr/lib/i386-linux-gnu:${BUILD_DIR}/.apt/usr/lib:$LD_LIBRARY_PATH"
 export LIBRARY_PATH="${BUILD_DIR}/.apt/usr/lib/x86_64-linux-gnu:${BUILD_DIR}/.apt/usr/lib/i386-linux-gnu:${BUILD_DIR}/.apt/usr/lib:$LIBRARY_PATH"
@@ -137,7 +150,7 @@ EOF
 cat <<EOF > ${BUILD_DIR}/appstartup
 #!/usr/bin/env bash
 echo "App is on port:$PORT"
-dotnet ${HOME}/${PROJECT_NAME}.dll --server.urls=http://+:\$PORT ${CORE_ENV}
+dotnet ${HOME}/${PROJECT_NAME}.dll --server.urls http://+:\$PORT ${CORE_ENV}
 EOF
 chmod 777 ${BUILD_DIR}/appstartup
 
