@@ -117,7 +117,7 @@ echo "dotnet publish --output ${BUILD_DIR} --configuration ${CORE_CONFIG} ${PROJ
 dotnet publish --output ${BUILD_DIR} --configuration ${CORE_CONFIG} ${PROJECT_JSON_FILE} --runtime ${CORE_VERSION}
 print "dotnet publish ended."
 
-cp -f ${SRC_DIR}/project.json ${HOME}/
+cp -f ${SRC_DIR}/project.json ${BUILD_DIR}/
 PROJECT_NAME=$(grep -Po '"'"outputName"'"\s*:\s*"\K([^"]*)'  ${PROJECT_JSON_FILE})
 print "${PROJECT_NAME}.dll has been created."
 
