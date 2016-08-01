@@ -117,8 +117,8 @@ echo "dotnet publish --output ${BUILD_DIR} --configuration ${CORE_CONFIG} ${PROJ
 dotnet publish --output ${BUILD_DIR} --configuration ${CORE_CONFIG} ${PROJECT_JSON_FILE} --runtime ${CORE_VERSION}
 print "dotnet publish ended."
 
-cp -f ${SRC_DIR}/project.json ${BUILD_DIR}/
-cp -f ${SRC_DIR}/project.lock.json ${BUILD_DIR}/
+#cp -f ${SRC_DIR}/project.json ${BUILD_DIR}/
+#cp -f ${SRC_DIR}/project.lock.json ${BUILD_DIR}/
 PROJECT_NAME=$(grep -Po '"'"outputName"'"\s*:\s*"\K([^"]*)'  ${PROJECT_JSON_FILE})
 print "${PROJECT_NAME}.dll has been created."
 
@@ -136,8 +136,8 @@ EOF
 # app start up script
 cat <<EOF > ${BUILD_DIR}/appstartup
 #!/usr/bin/env bash
-dotnet run --runtime ${CORE_VERSION} --configuration ${CORE_CONFIG} --project ${HOME}/${PROJECT_JSON_FILE} --server.urls http://+:\$PORT
-#dotnet ${HOME}/${PROJECT_NAME}.dll --server.urls http://+:\$APP_PORT ${CORE_ENV}
+echo "App is on port:$PORT"
+dotnet ${HOME}/${PROJECT_NAME}.dll --server.urls http://+:\$PORT ${CORE_ENV}
 EOF
 chmod 777 ${BUILD_DIR}/appstartup
 
