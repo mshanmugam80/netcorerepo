@@ -135,8 +135,9 @@ EOF
 # app start up script
 cat <<EOF > ${BUILD_DIR}/appstartup
 #!/usr/bin/env bash
-echo "App starts on port number $PORT"
-dotnet run --server.urls http://localhost:\$PORT
+APP_PORT=$PORT
+echo "App starts on port number $APP_PORT"
+dotnet ${HOME}/${PROJECT_NAME}.dll --server.urls http://+:\$APP_PORT ${CORE_ENV}
 EOF
 chmod 777 ${BUILD_DIR}/appstartup
 
