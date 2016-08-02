@@ -15,6 +15,7 @@ ENV_DIR=$3
 : ${CORE_BRANCH:="Sdk"}
 : ${CORE_REL_VERSION:="rel-1.0.0"}
 : ${CORE_VERSION:="latest"}
+: ${CORE_RUNTIME:="Active"}
 
 function print() {
   echo "-----> $*"
@@ -126,8 +127,8 @@ print "dotnet restore all dependencies completed"
 
 #dotnet pulish using project.json
 print "dotnet publish starts."
-echo "dotnet publish --output ${BUILD_DIR} --configuration ${CORE_CONFIG} ${PROJECT_JSON_FILE} --runtime ${CORE_VERSION}"
-dotnet publish --output ${BUILD_DIR} --configuration ${CORE_CONFIG} ${PROJECT_JSON_FILE} --runtime ${CORE_VERSION}
+echo "dotnet publish --output ${BUILD_DIR} --configuration ${CORE_CONFIG} ${PROJECT_JSON_FILE} --runtime ${CORE_RUNTIME}"
+dotnet publish --output ${BUILD_DIR} --configuration ${CORE_CONFIG} ${PROJECT_JSON_FILE} --runtime ${CORE_RUNTIME}
 print "dotnet publish ended."
 
 #cp -f ${SRC_DIR}/project.json ${BUILD_DIR}/
@@ -156,4 +157,6 @@ chmod 777 ${BUILD_DIR}/appstartup
 
 # Create procfile
 print "Procfile setting:-"
-echo "web: ./appstartup" > ${BUILD_DIR}/Procfile
+#echo "web: ./appstartup" > ${BUILD_DIR}/Procfile
+echo "web: ${HOME}/dotnet ${HOME}/${PROJECT_NAME}.dll --server.urls http://+:\$PORT ${CORE_ENV}"
+echo "web: ${HOME}/dotnet ${HOME}/${PROJECT_NAME}.dll --server.urls http://+:\$PORT ${CORE_ENV}" > ${BUILD_DIR}/Procfile
