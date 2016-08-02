@@ -11,7 +11,7 @@ fi
 BUILD_DIR=$1
 CACHE_DIR=$2
 ENV_DIR=$3
-: ${LIBUV_VERSION:="1.8.0"}
+#: ${LIBUV_VERSION:="1.8.0"}
 : ${CORE_BRANCH:="Sdk"}
 : ${CORE_REL_VERSION:="rel-1.0.0"}
 : ${CORE_VERSION:="latest"}
@@ -31,7 +31,8 @@ function indent() {
 
 function export_env_dir() {
   local env_dir=$1
-  local whitelist_regex=${2:-'(CORE_VERSION|LIBUV_VERSION|PROJECT|BUILD_DEBUG|CORE_BRANCH|CORE_REL_VERSION)$'}
+  #local whitelist_regex=${2:-'(CORE_VERSION|LIBUV_VERSION|PROJECT|BUILD_DEBUG|CORE_BRANCH|CORE_REL_VERSION)$'}
+  local whitelist_regex=${2:-'(CORE_VERSION|PROJECT|BUILD_DEBUG|CORE_BRANCH|CORE_REL_VERSION)$'}
   local blacklist_regex=${3:-'^(PATH|GIT_DIR|CPATH|CPPATH|LD_PRELOAD|LIBRARY_PATH)$'}
   if [ -d "$env_dir" ]; then
     for e in $(ls $env_dir); do
@@ -86,19 +87,6 @@ for DEB in $(ls -1 $LD_DIR/lib/*.deb); do
   dpkg -x $DEB ${BUILD_DIR}/.apt/
 done
 
-# libuv configuration
-#print "libuv install"
-#mkdir -p ${BUILD_DIR}/libuvinstall
-#curl -sSL https://github.com/libuv/libuv/archive/v${LIBUV_VERSION}.tar.gz | tar zxfv - -C ${BUILD_DIR}
-#cd ${BUILD_DIR}/libuv-${LIBUV_VERSION}
-#sh autogen.sh
-#./configure --prefix=${BUILD_DIR}/libuvinstall
-#make
-#make install
-#cd ${SRC_DIR}
-#rm -rf ${BUILD_DIR}/libuv-${LIBUV_VERSION}
-#print "libuv installed."
-
 export PATH="${BUILD_DIR}/.apt/usr/bin:$PATH"
 export LD_LIBRARY_PATH="${BUILD_DIR}/.apt/usr/lib/x86_64-linux-gnu:${BUILD_DIR}/.apt/usr/lib/i386-linux-gnu:${BUILD_DIR}/.apt/usr/lib:$LD_LIBRARY_PATH"
 export LIBRARY_PATH="${BUILD_DIR}/.apt/usr/lib/x86_64-linux-gnu:${BUILD_DIR}/.apt/usr/lib/i386-linux-gnu:${BUILD_DIR}/.apt/usr/lib:$LIBRARY_PATH"
@@ -146,7 +134,6 @@ EOF
 # Create procfile
 print "Procfile setting:-"
 #echo "web: ./appstartup" > ${BUILD_DIR}/Procfile
-echo "http://localhost:$PORT/"
-set ASPNETCORE_SERVER.URLS=http://localhost:$PORT/
-echo "web: dotnet ./${PROJECT_NAME}.dll --server.urls http://0.0.0.0:\$PORT ${CORE_ENV}"
+#set ASPNETCORE_SERVER.URLS=http://localhost:$PORT/
+#echo "web: dotnet ./${PROJECT_NAME}.dll --server.urls http://0.0.0.0:\$PORT ${CORE_ENV}"
 echo "web: dotnet ./${PROJECT_NAME}.dll --server.urls http://0.0.0.0:\$PORT ${CORE_ENV}" > ${BUILD_DIR}/Procfile
