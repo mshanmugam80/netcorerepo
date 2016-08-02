@@ -89,17 +89,17 @@ for DEB in $(ls -1 $LD_DIR/lib/*.deb); do
 done
 
 # libuv configuration
-print "libuv install"
-mkdir -p ${BUILD_DIR}/libuvinstall
-curl -sSL https://github.com/libuv/libuv/archive/v${LIBUV_VERSION}.tar.gz | tar zxfv - -C ${BUILD_DIR}
-cd ${BUILD_DIR}/libuv-${LIBUV_VERSION}
-sh autogen.sh
-./configure --prefix=${BUILD_DIR}/libuvinstall
-make
-make install
-cd ${SRC_DIR}
-rm -rf ${BUILD_DIR}/libuv-${LIBUV_VERSION}
-print "libuv installed."
+#print "libuv install"
+#mkdir -p ${BUILD_DIR}/libuvinstall
+#curl -sSL https://github.com/libuv/libuv/archive/v${LIBUV_VERSION}.tar.gz | tar zxfv - -C ${BUILD_DIR}
+#cd ${BUILD_DIR}/libuv-${LIBUV_VERSION}
+#sh autogen.sh
+#./configure --prefix=${BUILD_DIR}/libuvinstall
+#make
+#make install
+#cd ${SRC_DIR}
+#rm -rf ${BUILD_DIR}/libuv-${LIBUV_VERSION}
+#print "libuv installed."
 
 export PATH="${BUILD_DIR}/.apt/usr/bin:$PATH"
 export LD_LIBRARY_PATH="${BUILD_DIR}/.apt/usr/lib/x86_64-linux-gnu:${BUILD_DIR}/.apt/usr/lib/i386-linux-gnu:${BUILD_DIR}/.apt/usr/lib:$LD_LIBRARY_PATH"
@@ -131,8 +131,6 @@ echo "dotnet publish --output ${BUILD_DIR} --configuration ${CORE_CONFIG} ${PROJ
 dotnet publish --output ${BUILD_DIR} --configuration ${CORE_CONFIG} ${PROJECT_JSON_FILE} --runtime ${CORE_RUNTIME}
 print "dotnet publish ended."
 
-#cp -f ${SRC_DIR}/project.json ${BUILD_DIR}/
-#cp -f ${SRC_DIR}/project.lock.json ${BUILD_DIR}/
 PROJECT_NAME=$(grep -Po '"'"outputName"'"\s*:\s*"\K([^"]*)'  ${PROJECT_JSON_FILE})
 print "${PROJECT_NAME}.dll has been created."
 
@@ -158,5 +156,5 @@ chmod 777 ${BUILD_DIR}/appstartup
 # Create procfile
 print "Procfile setting:-"
 #echo "web: ./appstartup" > ${BUILD_DIR}/Procfile
-echo "web: ${HOME}/dotnet ${HOME}/${PROJECT_NAME}.dll --server.urls http://+:\$PORT ${CORE_ENV}"
-echo "web: ${HOME}/dotnet ${HOME}/${PROJECT_NAME}.dll --server.urls http://+:\$PORT ${CORE_ENV}" > ${BUILD_DIR}/Procfile
+echo "web: ${HOME}/dotnet/dotnet ${HOME}/${PROJECT_NAME}.dll --server.urls http://+:\$PORT ${CORE_ENV}"
+echo "web: ${HOME}/dotnet/dotnet ${HOME}/${PROJECT_NAME}.dll --server.urls http://+:\$PORT ${CORE_ENV}" > ${BUILD_DIR}/Procfile
