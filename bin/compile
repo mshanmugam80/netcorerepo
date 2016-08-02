@@ -143,17 +143,10 @@ export CPPPATH="\$INCLUDE_PATH"
 export PKG_CONFIG_PATH="\$HOME/.apt/usr/lib/x86_64-linux-gnu/pkgconfig:\$HOME/.apt/usr/lib/i386-linux-gnu/pkgconfig:\$HOME/.apt/usr/lib/pkgconfig:\$PKG_CONFIG_PATH"
 EOF
 
-# app start up script
-cat <<EOF > ${BUILD_DIR}/appstartup
-#!/usr/bin/env bash
-echo "App is on port:$PORT"
-dotnet ${HOME}/${PROJECT_NAME}.dll --server.urls http://+:\$PORT ${CORE_ENV}
-EOF
-chmod 777 ${BUILD_DIR}/appstartup
-
 # Create procfile
 print "Procfile setting:-"
 #echo "web: ./appstartup" > ${BUILD_DIR}/Procfile
+echo "http://localhost:$PORT/"
 set ASPNETCORE_SERVER.URLS=http://localhost:$PORT/
 echo "web: dotnet ./${PROJECT_NAME}.dll --server.urls http://0.0.0.0:\$PORT ${CORE_ENV}"
 echo "web: dotnet ./${PROJECT_NAME}.dll --server.urls http://0.0.0.0:\$PORT ${CORE_ENV}" > ${BUILD_DIR}/Procfile
