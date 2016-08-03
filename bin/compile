@@ -16,6 +16,7 @@ ENV_DIR=$3
 : ${CORE_REL_VERSION:="rel-1.0.0"}
 : ${CORE_VERSION:="latest"}
 : ${CORE_RUNTIME:="Active"}
+: ${NODE_VERSION:="6.3.1"}
 
 function print() {
   echo "-----> $*"
@@ -106,6 +107,18 @@ curl ${CORE_DWLD_URL} -Ls | tar xz -C ${BUILD_DIR}/dotnet
 ln -s ${BUILD_DIR}/dotnet ${HOME}
 export PATH="${HOME}/dotnet:${PATH}"
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}"
+
+print "Node and npm installation starts"
+if [[ -n $(find . -type f -iname package.json -o -iname bower.json -o -iname gruntfile.js) ]]
+then
+	# Install Node and grunt-cli
+	NODE_PATH=`mktemp -d`
+	curl https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.gz -Ls \
+		| tar xz -C ${NODE_PATH}
+	export PATH="${NODE_PATH}/node-v${NODE_VERSION}-linux-x64/bin:${PATH}"
+	npm install -g grunt-cli bower gulp
+fi
+print "Node and npm have been installed"
 
 print "dotnet restore all dependencies"
 dotnet restore ${PROJECT_JSON_FILE} --no-cache
