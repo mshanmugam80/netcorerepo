@@ -116,7 +116,8 @@ then
 	curl https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.gz -Ls \
 		| tar xz -C ${NODE_PATH}
 	export PATH="${NODE_PATH}/node-v${NODE_VERSION}-linux-x64/bin:${PATH}"
-	npm install -g grunt-cli bower gulp
+	echo "node version: `node --version`"
+	#npm install -g grunt-cli bower gulp
 fi
 print "Node and npm have been installed"
 
