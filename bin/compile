@@ -134,9 +134,9 @@ EOF
 
 cat <<EOF > ${BUILD_DIR}/appstartup
 #!/usr/bin/env bash
-echo "{ \"server.urls\": \"http://localhost:\$PORT;\" }" > ${HOME}/hosting.json
-cat ${HOME}/hosting.json
-dotnet ${HOME}/${PROJECT_NAME}.dll ${CORE_ENV}
+#echo "{ \"server.urls\": \"http://localhost:\$PORT;\" }" > ${HOME}/hosting.json
+#cat ${HOME}/hosting.json
+dotnet ${HOME}/${PROJECT_NAME}.dll http://localhost:\$PORT ${CORE_ENV}
 EOF
 chmod 777 ${BUILD_DIR}/appstartup
 
