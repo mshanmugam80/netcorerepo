@@ -108,19 +108,6 @@ ln -s ${BUILD_DIR}/dotnet ${HOME}
 export PATH="${HOME}/dotnet:${PATH}"
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}"
 
-print "Node and npm installation starts"
-if [[ -n $(find . -type f -iname package.json -o -iname bower.json -o -iname gruntfile.js) ]]
-then
-	# Install Node and grunt-cli
-	NODE_PATH=`mktemp -d`
-	curl https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.gz -Ls \
-		| tar xz -C ${NODE_PATH}
-	export PATH="${NODE_PATH}/node-v${NODE_VERSION}-linux-x64/bin:${PATH}"
-	echo "node version: `node --version`"
-	#npm install -g grunt-cli bower gulp
-fi
-print "Node and npm have been installed"
-
 print "dotnet restore all dependencies"
 dotnet restore ${PROJECT_JSON_FILE} --no-cache
 print "dotnet restore all dependencies completed"
@@ -150,4 +137,4 @@ print "Procfile setting:-"
 #echo "web: ./appstartup" > ${BUILD_DIR}/Procfile
 #set ASPNETCORE_SERVER.URLS=http://localhost:$PORT/
 #echo "web: dotnet ./${PROJECT_NAME}.dll --server.urls http://0.0.0.0:\$PORT ${CORE_ENV}"
-echo "web: dotnet ./${PROJECT_NAME}.dll --server.urls http://0.0.0.0:\$PORT ${CORE_ENV}" > ${BUILD_DIR}/Procfile
+echo "web: `sed -i 's/PORT/$PORT/g' file.txt` && dotnet ./${PROJECT_NAME}.dll {CORE_ENV}" > ${BUILD_DIR}/Procfile
