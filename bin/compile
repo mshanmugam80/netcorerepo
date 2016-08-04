@@ -135,6 +135,6 @@ EOF
 # Create procfile
 print "Procfile setting:-"
 cat <<EOF >${BUILD_DIR}/Procfile
-sed -i 's/PORT/$PORT/g' ./hosting.json
-web: dotnet ./${PROJECT_NAME}.dll --server.urls http://0.0.0.0:\$PORT {CORE_ENV}
+echo "{ \"server.urls\": \"http://localhost:$PORT;\" }" > /app/hosting.json
+web: dotnet ./${PROJECT_NAME}.dll --server.urls http://0.0.0.0:\$PORT ${CORE_ENV}
 EOF
