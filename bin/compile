@@ -135,7 +135,10 @@ EOF
 # Create procfile
 print "Procfile setting:-"
 cat <<EOF >${BUILD_DIR}/Procfile
-web: cat <<EOF>${HOME}/hosting.json {
+web: `cat <<EOF>${HOME}/hosting.json 
+{
     "server.urls": "http://localhost:\$PORT;"
-}EOF && dotnet ${HOME}/${PROJECT_NAME}.dll ${CORE_ENV}
+}
+EOF`
+&& dotnet ${HOME}/${PROJECT_NAME}.dll ${CORE_ENV}
 EOF
