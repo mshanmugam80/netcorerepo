@@ -132,13 +132,15 @@ export CPPPATH="\$INCLUDE_PATH"
 export PKG_CONFIG_PATH="\$HOME/.apt/usr/lib/x86_64-linux-gnu/pkgconfig:\$HOME/.apt/usr/lib/i386-linux-gnu/pkgconfig:\$HOME/.apt/usr/lib/pkgconfig:\$PKG_CONFIG_PATH"
 EOF
 
+cat <<EOF > ${BUILD_DIR}/appstartup
+#!/usr/bin/env bash
+echo "{ \"server.urls\": \"http://localhost:\$PORT;\" }" > ${HOME}/hosting.json
+dotnet ${HOME}/${PROJECT_NAME}.dll ${CORE_ENV}
+EOF
+chmod 777 ${BUILD_DIR}/appstartup
+
 # Create procfile
 print "Procfile setting:-"
 cat <<EOF >${BUILD_DIR}/Procfile
-web: `cat <<EOF>${HOME}/hosting.json 
-{
-    "server.urls": "http://localhost:\$PORT;"
-}
-EOF`
-&& dotnet ${HOME}/${PROJECT_NAME}.dll ${CORE_ENV}
+web: ./appstartup
 EOF
