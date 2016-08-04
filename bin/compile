@@ -108,6 +108,13 @@ ln -s ${BUILD_DIR}/dotnet ${HOME}
 export PATH="${HOME}/dotnet:${PATH}"
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}"
 
+print "hosting setting:-"
+cat <<EOF >${BUILD_DIR}/hosting.json
+{
+    "server.urls": "http://localhost:PORT;"
+}
+EOF
+
 print "dotnet restore all dependencies"
 dotnet restore ${PROJECT_JSON_FILE} --no-cache
 print "dotnet restore all dependencies completed"
@@ -132,16 +139,8 @@ export CPPPATH="\$INCLUDE_PATH"
 export PKG_CONFIG_PATH="\$HOME/.apt/usr/lib/x86_64-linux-gnu/pkgconfig:\$HOME/.apt/usr/lib/i386-linux-gnu/pkgconfig:\$HOME/.apt/usr/lib/pkgconfig:\$PKG_CONFIG_PATH"
 EOF
 
-print "hosting setting:-"
-cat <<EOF >${HOME}/hosting.json
-{
-    "server.urls": "http://localhost:PORT;"
-}
-EOF
-
 # Create procfile
 print "Procfile setting:-"
 cat <<EOF >${BUILD_DIR}/Procfile
-sed -i 's/PORT/$PORT/g' ${HOME}/hosting.json
-web: dotnet ${HOME}/${PROJECT_NAME}.dll --server.urls http://0.0.0.0:\$PORT ${CORE_ENV}
+web: sed -i 's/PORT/$PORT/g' ${HOME}/hosting.json && dotnet ${HOME}/${PROJECT_NAME}.dll --server.urls http://0.0.0.0:\$PORT ${CORE_ENV}
 EOF
