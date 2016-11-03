@@ -61,7 +61,7 @@ SRC_DIR=`mktemp -d`
 )
 print "Build Dir Path: ${SRC_DIR}"
 
-if [[ -n $(find ${SRC_DIR} -type f -iname package.json -o -iname bower.json -o -iname gulpfile.js) ]]
+if [[ -n $(find ${SRC_DIR} -type f -iname package.json -o -iname bower.json) ]]
 then
 	echo "Installing Node"
 	NODE_PATH=`mktemp -d`
