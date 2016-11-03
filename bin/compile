@@ -74,7 +74,7 @@ then
 	fi
 	echo "Installing gulp"
 	if ! hash gulp 2>/dev/null; then
-		npm install -g gulp
+		npm install -g gulp-cli
 	fi
 fi
 
