@@ -61,6 +61,43 @@ SRC_DIR=`mktemp -d`
 )
 print "Build Dir Path: ${SRC_DIR}"
 
+if [[ -n $(find ${SRC_DIR} -type f -iname package.json -o -iname bower.json) ]]
+then
+	echo "Installing Node"
+	NODE_PATH=`mktemp -d`
+	curl https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.gz -Ls \
+		| tar xz -C ${NODE_PATH}
+	export PATH="${NODE_PATH}/node-v${NODE_VERSION}-linux-x64/bin:${PATH}"
+	echo "Installing bower"
+	if ! hash bower 2>/dev/null; then
+		npm install -g bower
+	fi
+fi
+
+# Install .NET Core
+echo "Get .NET Core Version and Channel from the PROJECT"
+DEPLOYMENT_LOCATION=${SRC_DIR}/.deployment
+print "${DEPLOYMENT_LOCATION}"
+CORE_DOWNLOAD_LOCATION=""
+if [ -n "$(find ${SRC_DIR}/global.json)" ]; then
+	echo "Get version from global.json"
+	CORE_VERSION=$(ruby -rjson -e "j = JSON.parse(File.open('${SRC_DIR}/global.json','r:bom|utf-8').read); unless j['sdk'].nil? ; puts j['sdk']['version'];end")
+	if [ -z "${CORE_VERSION}" ]; then
+		CORE_VERSION="latest"
+	elif [[ "${CORE_VERSION}" != "latest" ]]; then
+		if [ ! "${CORE_VERSION}" > "1.0.0-preview1-002702" ]; then
+			CORE_CHANNEL="beta"
+		elif [ "${CORE_VERSION}" > "1.0.0-preview2-003121" ]; then
+			#TODO
+			CORE_DOWNLOAD_LOCATION="https://dotnetcli.blob.core.windows.net/dotnet/Sdk/rel-1.0.0/dotnet-dev-ubuntu-x64.latest.tar.gz"
+		fi
+	fi
+fi
+
+print "${CORE_VERSION}"
+print "${CORE_CHANNEL}"
+print "${CORE_DOWNLOAD_LOCATION}"
+
 # Find project.json
 PROJECT_JSON_FILES=$(find ${SRC_DIR}/. -maxdepth 3 -iname "project.json")
 printf 'Found %s project.json files\n' $(echo "$PROJECT_JSON_FILES" | wc -l | tr -d ' ')
@@ -115,7 +152,7 @@ print "dotnet restore all dependencies completed"
 #dotnet pulish using project.json
 print "dotnet publish starts."
 echo "dotnet publish --output ${BUILD_DIR} --configuration ${CORE_CONFIG} ${PROJECT_JSON_FILE} --runtime ${CORE_RUNTIME}"
-dotnet publish --output ${BUILD_DIR} --configuration ${CORE_CONFIG} ${PROJECT_JSON_FILE} --runtime ${CORE_RUNTIME}
+dotnet publish --output ${BUILD_DIR} --configuration ${CORE_CONFIG} ${PROJECT_JSON_FILE}
 print "dotnet publish ended."
 
 PROJECT_NAME=$(grep -Po '"'"outputName"'"\s*:\s*"\K([^"]*)'  ${PROJECT_JSON_FILE})
@@ -134,5 +171,5 @@ EOF
 
 print "Procfile setting"
 cat <<EOF >${BUILD_DIR}/Procfile
-web: dotnet ${HOME}/${PROJECT_NAME}.dll http://0.0.0.0:\$PORT ${CORE_ENV}
+web: dotnet ${HOME}/${PROJECT_NAME}.dll --server.urls http://+:\$PORT ${CORE_ENV}
 EOF
