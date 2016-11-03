@@ -61,7 +61,7 @@ SRC_DIR=`mktemp -d`
 )
 print "Build Dir Path: ${SRC_DIR}"
 
-if [[ -n $(find ${SRC_DIR} -type f -iname package.json -o -iname bower.json) ]]
+if [[ -n $(find ${SRC_DIR} -type f -iname package.json -o -iname bower.json -o -iname gulpfile.js) ]]
 then
 	echo "Installing Node"
 	NODE_PATH=`mktemp -d`
@@ -145,6 +145,7 @@ curl ${CORE_DWLD_URL} -Ls | tar xz -C ${BUILD_DIR}/dotnet
 ln -s ${BUILD_DIR}/dotnet ${HOME}
 export PATH="${HOME}/dotnet:${PATH}"
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}"
+export PATH="${BUILD_DIR}/node_modules/.bin:${PATH}"
 
 print "dotnet restore all dependencies"
 dotnet restore ${PROJECT_JSON_FILE} --no-cache
