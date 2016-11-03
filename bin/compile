@@ -147,7 +147,7 @@ CORE_DWLD_URL="https://download.microsoft.com/download/8/C/9/8C9182C7-9DCD-40C1-
 print "DotNet Core Sdk Package Installation Starts From : ${CORE_DWLD_URL}"
 mkdir -p "${BUILD_DIR}/dotnet"
 #curl ${CORE_DWLD_URL} -Ls | tar xz -C ${BUILD_DIR}/dotnet
-curl ${CORE_DWLD_URL} -Ls | tar zxf -C ${BUILD_DIR}/dotnet
+curl ${CORE_DWLD_URL} -Ls | tar zx -C ${BUILD_DIR}/dotnet
 ln -s ${BUILD_DIR}/dotnet ${HOME}
 
 export PATH="${HOME}/dotnet:${PATH}"
