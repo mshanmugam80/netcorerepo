@@ -87,6 +87,7 @@ PROJECT_JSON_FILE=$(echo "$PROJECT_JSON_FILES" | head -1)
 # Install .NET Core
 print "DotNet Core version from project.json"
 CORE_VERSION=$(grep -Po '"'"version"'"\s*:\s*"\K([^"]*)'  ${PROJECT_JSON_FILE} | head -1)
+print "${CORE_VERSION}"
 if [ -z "${CORE_VERSION}" ]; then
 	CORE_VERSION="latest"
 elif [[ "${CORE_VERSION}" != "latest" ]]; then
@@ -96,7 +97,6 @@ elif [[ "${CORE_VERSION}" != "latest" ]]; then
 		CORE_DWLD_URL="https://download.microsoft.com/download/8/C/9/8C9182C7-9DCD-40C1-B72A-BEC4C3FC1FC1/dotnet-dev-ubuntu-x64.1.0.0-preview2.1-003155.tar.gz"
 	fi
 fi
-print "${CORE_VERSION}"
 
 if [ -n "$BUILD_DEBUG" ]; then
 	CORE_CONFIG="Debug"
