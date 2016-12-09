@@ -2,6 +2,5 @@
 cat <<EOF
 addons:
  - heroku-postgresql:hobby-dev
-dotnet ef database update
 EOF
 
