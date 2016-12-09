@@ -3,5 +3,6 @@ cat <<EOF
 addons:
  - heroku-postgresql:hobby-dev
 EOF
+echo "Database is updating"
 dotnet ef database update
-echo "-----> Database has been updated"
+echo "Database has been updated"
