@@ -3,4 +3,3 @@ cat <<EOF
 addons:
  - heroku-postgresql:hobby-dev
 EOF
-dotnet ef -p ${PROJECT_JSON_FILE} -s ${PROJECT_JSON_FILE} database update
