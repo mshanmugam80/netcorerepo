@@ -1,0 +1,11 @@
+{
+  "name": "Asp.NetCore Web App With PostgreSQL",
+  "description": "Asp.Net website using Asp.Net Core",
+  "repository": "https://github.com/mshanmugam80/mynetcoresample",
+  "keywords": ["aspnet core","asp.netcore postgresql"],
+  "buildpacks": [
+    {
+      "url": "https://github.com/mshanmugam80/netcorerepo.git"
+    }
+  ]
+}
