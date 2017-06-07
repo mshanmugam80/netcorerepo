@@ -1,5 +1,3 @@
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/jane/example)
-
 # .NET Core Buildpack with Heroku Postgres Support 
 
 This Buidpack can be used to compile and deploy .Net Core application, ASP.Net Application, ASP.Net MVC Application which has postgresql database dependency to Heroku. This Buildpack will add free postgresql add-on on the fly while releasing.<br><br>
