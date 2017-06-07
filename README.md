@@ -1,4 +1,4 @@
-
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/jane/example)
 
 # .NET Core Buildpack with Heroku Postgres Support 
 
@@ -10,11 +10,5 @@ In order to see the buildpack in action, you can click on the button below which
 
 ##
 
-<a href="https://heroku.com/deploy?template=https://github.com/mshanmugam80/mynetcoresample/tree/master">
-
-  <img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy">
-
-</a>
-
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/jane/example)
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/mshanmugam80/mynetcoresample)
 
