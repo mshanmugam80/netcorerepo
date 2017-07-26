@@ -84,6 +84,10 @@ PROJECT_JSON_FILES=$(find ${SRC_DIR}/. -maxdepth 3 -iname "project.json")
 printf 'Found %s project.json files\n' $(echo "$PROJECT_JSON_FILES" | wc -l | tr -d ' ')
 PROJECT_JSON_FILE=$(echo "$PROJECT_JSON_FILES" | head -1)
 
+if [ -z "${PROJECT_JSON_FILE}" ]; then
+
+fi
+
 # Install .NET Core
 print "DotNet Core version from project.json"
 NETCORE_VERSION=$(grep -Po '"'"version"'"\s*:\s*"\K([^"]*)'  ${PROJECT_JSON_FILE} | head -1)
